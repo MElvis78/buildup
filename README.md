@@ -1,4 +1,4 @@
-# buildup_application
+# buildup
 
 A new Flutter project.
 
