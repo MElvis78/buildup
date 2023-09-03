@@ -1,6 +1,6 @@
 {
-    "name": "buildup",
-    "short_name": "buildup",
+    "name": "buildup_application",
+    "short_name": "buildup_application",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

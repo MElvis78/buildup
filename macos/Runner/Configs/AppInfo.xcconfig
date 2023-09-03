@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = buildup
+PRODUCT_NAME = buildup_application
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.buildup
+PRODUCT_BUNDLE_IDENTIFIER = com.example.buildupApplication
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
