@@ -99,7 +99,7 @@ class FindEmployers extends StatelessWidget {
                   width: 27,
                   height: 27,
                   child: Stack(children: [
-                  ,
+                  
                   ]),
                 ),
               ),
@@ -165,7 +165,7 @@ class FindEmployers extends StatelessWidget {
                   width: 27,
                   height: 27,
                   child: Stack(children: [
-                  ,
+                  
                   ]),
                 ),
               ),
@@ -775,7 +775,7 @@ class FindEmployers extends StatelessWidget {
                   width: 70.19,
                   height: 10.81,
                   child: Stack(children: [
-                  ,
+                  
                   ]),
                 ),
               ),
