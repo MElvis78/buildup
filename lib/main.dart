@@ -1,34 +1,70 @@
+import 'package:adaptive_navbar/adaptive_navbar.dart';
 import 'package:flutter/material.dart';
 
-
+/// Entry point of the application
 void main() {
-  runApp(const MaterialApp(
-    title: 'Navigation Basics',
-    home: FirstRoute(),
-  ));
+  runApp(const MyApp());
 }
 
-class FirstRoute extends StatelessWidget {
-  const FirstRoute({super.key});
+/// Base structure of the app.
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Adaptive NavBar',
+      home: HomePage(),
+    );
+  }
+}
+
+/// HomePage of the app.
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    /// Screen Width of the device.
+    final sw = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('First Route'),
+      appBar: AdaptiveNavBar(
+        screenWidth: sw,
+        title: const Text("Buildup NavBar"),
+        navBarItems: [
+          NavBarItem(
+            text: "Home",
+            onTap: () {
+              Navigator.pushNamed(context, "routeName");
+            },
+          ),
+          NavBarItem(
+            text: "About Us",
+            onTap: () {
+              Navigator.pushNamed(context, "routeName");
+            },
+          ),
+          NavBarItem(
+            text: "About Us",
+            onTap: () {
+              Navigator.pushNamed(context, "routeName");
+            },
+          ),
+          NavBarItem(
+            text: "About Us",
+            onTap: () {
+              Navigator.pushNamed(context, "routeName");
+            },
+          ),
+        ],
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text('Open route'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ContractDealingsRoom()),
-            );
-          },
+      body: const Center(
+        child: Text(
+          'This package, "ADAPTIVE NAVBAR", was developed by Mouli Bheemaneti.',
         ),
       ),
     );
   }
 }
-
