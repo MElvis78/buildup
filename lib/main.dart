@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
            );
          }
          return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Buildup App',
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.black,
