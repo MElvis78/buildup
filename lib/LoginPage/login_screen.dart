@@ -15,6 +15,14 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   late Animation<double> _animation;
   late AnimationController _animationController;
 
+  final TextEditingController _emailTextController = TextEditingController(text: '');
+  final TextEditingController _passTextController = TextEditingController(text: '');
+
+
+  final FocusNode _passFocusNode = FocusNode();
+  bool _obscureText = true;
+  final _loginFormKey = GlobalKey<FormState>();
+
   @override
   void dispose(){
     _animationController.dispose();
@@ -26,7 +34,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   void initState(){
     _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 20));
     _animation = CurvedAnimation(parent: _animationController, curve: Curves.linear)
-    ..addListener(() { })
+    ..addListener(() { 
+      setState(() {}); //remove setState(() {}); for a still bg image
+    })
     ..addStatusListener((animationstatus) {
     if(animationstatus == AnimationStatus.completed)
     {
@@ -56,8 +66,108 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               height: double.infinity,
               fit: BoxFit.cover,
               alignment: FractionalOffset(_animation.value, 0),
+            ),
+            Container(
+              color: Colors.black54,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 88),
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 80, right: 80),
+                      child: Image.asset('assets/images/login.png'),
+                    ),
+                    const SizedBox(height: 15,),
+                    Form(
+                      key: _loginFormKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            textInputAction: TextInputAction.next,
+                            onEditingComplete: () => FocusScope.of(context).requestFocus(_passFocusNode),
+                            keyboardType: TextInputType.emailAddress,
+                            controller: _emailTextController,
+                            validator: (value)
+                            {
+                              if(value!.isEmpty || !value.contains('@'))
+                              {
+                                return "Please enter a valid email address";
+                              }
+                              else
+                              {
+                                return null;
+                              }
+                            },
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: 'Email',
+                              hintStyle: TextStyle(color: Colors.white),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                ),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                            ),
+                          ),
+                          const SizedBox(height:5,),
+                          TextFormField(
+                            textInputAction: TextInputAction.next,
+                            focusNode: _passFocusNode,
+                            keyboardType: TextInputType.visiblePassword,
+                            controller: _passTextController,
+                            obscureText: !_obscureText, //change it dynamically
+                            validator: (value)
+                            {
+                              if(value!.isEmpty || value.length < 7)
+                              {
+                                return "Please enter a valid password";
+                              }
+                              else
+                              {
+                                return null;
+                              }
+                            },
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              suffixIcon: GestureDetector(
+                                onTap: ()
+                                {
+                                  setState(() {
+                                    _obscureText = !_obscureText;
+                                  });
 
-            )
+                                },
+                                child: Icon(
+                                  _obscureText
+                                  ?Icons.visibility
+                                  :Icons.visibility_off,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              hintText: 'Password',
+                              hintStyle: const TextStyle(color: Colors.white),
+                              enabledBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                ),
+                                errorBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                            ),
+                          ),
+                        ],
+                        ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ]
       ),
     );
