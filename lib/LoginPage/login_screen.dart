@@ -1,9 +1,12 @@
 import 'package:buildup_application/ForgetPassword/forget_password_screen.dart';
 import 'package:buildup_application/Services/global_methods.dart';
 import 'package:buildup_application/Services/global_variables.dart';
+import 'package:buildup_application/SignupPage/signup_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -242,15 +245,26 @@ void _submitFormOnLogin() async
                           const SizedBox(height: 40,),
                           Center(
                             child: RichText(
-                              text: const TextSpan(
+                              text: TextSpan(
                                 children: [
-                                TextSpan(
-                                  text: 'Do not have an account',
+                                const TextSpan(
+                                  text: 'Do not have an account?',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
+                                  ),
+                                  const TextSpan(text: '     '),
+                                  TextSpan(
+                                    recognizer: TapGestureRecognizer()
+                                    ..onTap = () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUp())),
+                                    text: 'Signup',
+                                    style: const TextStyle(
+                                      color: Colors.cyan,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ]
                               ),
