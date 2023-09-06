@@ -1,3 +1,4 @@
+import 'package:buildup_application/ForgetPassword/forget_password_screen.dart';
 import 'package:buildup_application/Services/global_variables.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +49,12 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     super.initState();
   }
 
-
-
+void _submitFormOnLogin() async
+{
+  final isValid = _loginFormKey.currentState.validate();
+  if()
+}
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,6 +165,50 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                   borderSide: BorderSide(color: Colors.red),
                                 ),
                             ),
+                          ),
+                          const SizedBox(height: 15,),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: TextButton(
+                              onPressed: ()
+                              {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPassword()));
+
+                              },
+                              child: const Text(
+                                'Forget Password?',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10,),
+                          MaterialButton(
+                            onPressed: (){},
+                             color: Colors.cyan,
+                             elevation: 8,
+                             shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(13),
+                             ),
+                             child: const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 14),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ),
                           ),
                         ],
                         ),
