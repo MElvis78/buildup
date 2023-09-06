@@ -1,4 +1,5 @@
 import 'package:buildup_application/ForgetPassword/forget_password_screen.dart';
+import 'package:buildup_application/Services/global_methods.dart';
 import 'package:buildup_application/Services/global_variables.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -66,14 +67,21 @@ void _submitFormOnLogin() async
         email: _emailTextController.text.trim().toLowerCase(), 
         password: _passTextController.text.trim(),
         );
+        // ignore: use_build_context_synchronously
         Navigator.canPop(context) ? Navigator.canPop(context) : null;
     }catch(error)
     {
       setState(() {
         _isLoading = false;
       });
+      // ignore: use_build_context_synchronously
+      GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
+      print('error occured $error');
     }
   }
+  setState(() {
+    _isLoading = false;
+  });
 }
  
   @override
@@ -208,7 +216,7 @@ void _submitFormOnLogin() async
                           ),
                           const SizedBox(height: 10,),
                           MaterialButton(
-                            onPressed: (){},
+                            onPressed: _submitFormOnLogin,
                              color: Colors.cyan,
                              elevation: 8,
                              shape: RoundedRectangleBorder(
@@ -228,6 +236,23 @@ void _submitFormOnLogin() async
                                     ),
                                   ),
                                 ],
+                              ),
+                              ),
+                          ),
+                          const SizedBox(height: 40,),
+                          Center(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                TextSpan(
+                                  text: 'Do not have an account',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  ),
+                                ]
                               ),
                               ),
                           ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+
 class GlobalMethod
 {
   static void showErrorDialog({required String error, required BuildContext ctx})
@@ -28,7 +30,7 @@ class GlobalMethod
             ],
           ),
           content: Text(
-            '$error',
+            error,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -37,7 +39,9 @@ class GlobalMethod
           ), 
           actions: [
             TextButton(
-              onPressed: (){}, 
+              onPressed: (){
+                Navigator.canPop(context) ? Navigator.canPop(context) : null;
+              }, 
               child: const Text(
                 'Ok',
                 style: TextStyle(color: Colors.red),
