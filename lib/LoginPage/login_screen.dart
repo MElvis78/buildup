@@ -1,6 +1,7 @@
 import 'package:buildup_application/ForgetPassword/forget_password_screen.dart';
 import 'package:buildup_application/Services/global_variables.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -21,7 +22,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
 
   final FocusNode _passFocusNode = FocusNode();
+  bool _isLoading = false;
   bool _obscureText = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _loginFormKey = GlobalKey<FormState>();
 
   @override
@@ -51,8 +54,26 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
 void _submitFormOnLogin() async
 {
-  final isValid = _loginFormKey.currentState.validate();
-  if()
+  final isValid = _loginFormKey.currentState!.validate();
+  if(isValid)
+  {
+    setState(() {
+      _isLoading = true;
+    });
+    try
+    {
+      await _auth.signInWithEmailAndPassword(
+        email: _emailTextController.text.trim().toLowerCase(), 
+        password: _passTextController.text.trim(),
+        );
+        Navigator.canPop(context) ? Navigator.canPop(context) : null;
+    }catch(error)
+    {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 }
  
   @override
