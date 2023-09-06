@@ -10,7 +10,7 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   late Animation<double> _animation;
   late AnimationController _animationController;
@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
 
   @override
   void initState(){
-    _animationController = AnimationController(vsync: this, duration: Duration(seconds: 20));
+    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 20));
     _animation = CurvedAnimation(parent: _animationController, curve: Curves.linear)
     ..addListener(() { })
     ..addStatusListener((animationstatus) {
@@ -34,6 +34,7 @@ class _LoginState extends State<Login> {
       _animationController.forward();
     }
      });
+     _animationController.forward();
     super.initState();
   }
 
@@ -50,6 +51,12 @@ class _LoginState extends State<Login> {
               'assets/images/wallpaper.jpg',
               fit: BoxFit.fill,
               ),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+              alignment: FractionalOffset(_animation.value, 0),
+
             )
         ]
       ),
