@@ -4,6 +4,8 @@ import 'package:buildup_application/Services/global_variables.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -66,15 +68,15 @@ showDialog(
    builder: (context)
    {
     return AlertDialog(
-      title: Text('Please choose an option'),
+      title: const Text('Please choose an option'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
             onTap: (){
-              //creategetFromCamera
+              _getFromCamera();
             },
-            child: Row(
+            child: const Row(
               children: [
                 Padding(
                   padding: EdgeInsets.all(4.0),
@@ -92,9 +94,9 @@ showDialog(
           ),
           InkWell(
             onTap: (){
-              //creategetFromGallery
+              _getFromGallery();
             },
-            child: Row(
+            child: const Row(
               children: [
                 Padding(
                   padding: EdgeInsets.all(4.0),
@@ -115,6 +117,35 @@ showDialog(
     );
    }
   );
+}
+
+void _getFromCamera() async
+{
+ XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+ _cropImage(pickedFile!.path);
+ // ignore: use_build_context_synchronously
+ Navigator.pop(context);
+}
+
+void _getFromGallery() async
+{
+ XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+ _cropImage(pickedFile!.path);
+ // ignore: use_build_context_synchronously
+ Navigator.pop(context);
+}
+
+void _cropImage(filePath) async
+{
+  CroppedFile? croppedImage = await ImageCropper().cropImage(
+    sourcePath: filePath, maxHeight: 1080, maxWidth: 1080
+  );
+  if(croppedImage != null) 
+  {
+    setState(() {
+      imageFile = File(croppedImage.path);
+    });
+  }
 }
 
   @override
@@ -138,7 +169,7 @@ showDialog(
           Container(
             color: Colors.black54,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 80),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 80),
               child: ListView(
                 children: [
                   Form(
