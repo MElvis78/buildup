@@ -1,4 +1,5 @@
 import 'dart:io';
+// ignore: unused_import
 import 'dart:js_interop';
 
 import 'package:buildup_application/Services/global_methods.dart';
@@ -7,10 +8,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+//import 'package:image_cropper_for_web/image_cropper_for_web.dart';
+
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -43,6 +47,7 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
  final FirebaseAuth _auth = FirebaseAuth.instance;
  bool _isLoading = false;
  String? imageUrl;
+ Uint8List? webimage;
 
  @override
   void dispose(){
@@ -88,8 +93,17 @@ showDialog(
         mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
-            onTap: (){
-              _getFromCamera();
+            onTap: () async {
+              final Uint8List? image = await _getFromCamera();
+
+              if (image != null) {
+                webimage = image;
+                setState(() {});
+              }
+              Image.memory (
+                   webimage!,
+                   fit: BoxFit.cover,
+               );
             },
             child: const Row(
               children: [
@@ -134,23 +148,23 @@ showDialog(
   );
 }
 
-void _getFromCamera() async
+Future <Uint8List?> _getFromCamera() async
 {
- XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
- _cropImage(pickedFile!.path);
- // ignore: use_build_context_synchronously
- Navigator.pop(context);
+  ImagePicker image_picker = ImagePicker();
+  XFile? pickedFile = await image_picker.pickImage(source: ImageSource.camera, imageQuality: 90,);
+  if(pickedFile != null) return await pickedFile.readAsBytes();
+  return null;
 }
 
-void _getFromGallery() async
+Future <Uint8List?> _getFromGallery() async
 {
- XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
- _cropImage(pickedFile!.path);
- // ignore: use_build_context_synchronously
- Navigator.pop(context);
+  ImagePicker image_picker = ImagePicker();
+ XFile? pickedFile = await image_picker.pickImage(source: ImageSource.gallery, imageQuality: 90,);
+  if(pickedFile != null) return await pickedFile.readAsBytes();
+  return null;
 }
 
-void _cropImage(filePath) async
+Future <Uint8List?> _cropImage(filePath) async
 {
   CroppedFile? croppedImage = await ImageCropper().cropImage(
     sourcePath: filePath, maxHeight: 1080, maxWidth: 1080
@@ -161,6 +175,7 @@ void _cropImage(filePath) async
       imageFile = File(croppedImage.path);
     });
   }
+  return null;
 }
 
 void _submitFormOnSignUp() async
