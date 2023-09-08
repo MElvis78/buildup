@@ -1,7 +1,12 @@
 import 'dart:io';
+import 'dart:js_interop';
 
+import 'package:buildup_application/Services/global_methods.dart';
 import 'package:buildup_application/Services/global_variables.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -22,8 +27,8 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
  final TextEditingController _fullNameController = TextEditingController(text: '');
  final TextEditingController _emailTextController = TextEditingController(text: '');
  final TextEditingController _passTextController = TextEditingController(text: '');
- final TextEditingController _phoneNumberTextController = TextEditingController(text: '');
- final TextEditingController _locationTextController = TextEditingController(text: '');
+ final TextEditingController _phoneNumberController = TextEditingController(text: '');
+ final TextEditingController _locationController = TextEditingController(text: '');
 
 
 
@@ -35,11 +40,21 @@ class _SignUpState extends State<SignUp> with TickerProviderStateMixin {
  final _signUpFormKey = GlobalKey<FormState>();
  bool _obscureText = true;
  File? imageFile;
+ final FirebaseAuth _auth = FirebaseAuth.instance;
  bool _isLoading = false;
+ String? imageUrl;
 
  @override
   void dispose(){
     _animationController.dispose();
+    _fullNameController.dispose();
+    _emailTextController.dispose();
+    _passTextController.dispose();
+    _phoneNumberController.dispose();
+    _emailFocusNode.dispose();
+    _passFocusNode.dispose();
+    _positionCPFocusNode.dispose();
+    _phoneNumberFocusNode.dispose();
     super.dispose();
   }
 
@@ -146,6 +161,56 @@ void _cropImage(filePath) async
       imageFile = File(croppedImage.path);
     });
   }
+}
+
+void _submitFormOnSignUp() async
+{
+  final isValid = _signUpFormKey.currentState!.validate();
+  if(isValid)
+  {
+    if(imageFile == null)
+    {
+      GlobalMethod.showErrorDialog(
+        error: 'Please pick an image', 
+        ctx: context,
+        );
+         return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    try
+    {
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailTextController.text.trim().toLowerCase(),
+        password: _passTextController.text.trim(),
+      );
+      final User? user = _auth.currentUser;
+      final _uid = user!.uid;
+      final ref = FirebaseStorage.instance.ref().child('userImages').child(_uid + '.jpg');
+      await ref.putFile(imageFile!);
+      imageUrl = await ref.getDownloadURL();
+      FirebaseFirestore.instance.collection('users').doc(_uid).set({
+'id': _uid,
+'name': _fullNameController.text,
+'email': _emailTextController.text,
+'userImage': imageUrl,
+'phoneNumber': _phoneNumberController.text,
+'location': _locationController.text,
+'createdAt': Timestamp.now(),
+      });
+      Navigator.canPop(context) ? Navigator.of(context) : null;
+     }catch (error)
+     {
+      setState(() {
+        _isLoading = false;
+      });
+      GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
+     }
+  }
+  setState(() {
+        _isLoading = false;
+      });
 }
 
   @override
@@ -318,7 +383,7 @@ void _cropImage(filePath) async
                             textInputAction: TextInputAction.next,
                             onEditingComplete: () => FocusScope.of(context).requestFocus(_positionCPFocusNode),
                             keyboardType: TextInputType.phone,
-                            controller: _phoneNumberTextController,
+                            controller: _phoneNumberController,
                             validator: (value)
                             {
                               if(value!.isEmpty)
@@ -350,7 +415,7 @@ void _cropImage(filePath) async
                             textInputAction: TextInputAction.next,
                             onEditingComplete: () => FocusScope.of(context).requestFocus(_positionCPFocusNode),
                             keyboardType: TextInputType.text,
-                            controller: _locationTextController,
+                            controller: _locationController,
                             validator: (value)
                             {
                               if(value!.isEmpty)
@@ -390,7 +455,7 @@ void _cropImage(filePath) async
                            :
                            MaterialButton(
                             onPressed: (){
-                              //createsubmitFormOnSignUp
+                              _submitFormOnSignUp();  
                             },
                             color: Colors.cyan,
                             elevation: 8,
