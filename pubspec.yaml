@@ -42,7 +42,7 @@ dependencies:
   google_fonts: ^5.1.0
   url_launcher: ^6.1.14
   curved_navigation_bar: ^1.0.3
-  adaptive_navbar: ^0.0.3
+  adaptive_navbar: ^0.0.3 #personally added for an adaptative web navbar
   uuid: ^4.0.0
   fluttertoast: ^8.2.2
   firebase_auth: ^4.9.0
@@ -50,6 +50,8 @@ dependencies:
   responsive: ^0.3.11+11
   cloud_firestore: ^4.9.1
   firebase_storage: ^11.2.6
+  build_web_compilers: ^4.0.5 #added in attempt to solve the getimageFromGallery web issue
+  http: ^1.1.0 #added in attempt to solve the getimageFromGallery web issue
 
 dev_dependencies:
   flutter_test:
